@@ -22,7 +22,13 @@ syntax expression "-" expression : expression
 syntax "(" expression ")" : expression
 
 -- can we build this automatically from the above? (at least without the parentheses)
-mutual
+inductive Expression where
+ | num : Nat → Expression
+ | ident : Lean.Name → Expression
+ | add : Expression → Expression → Expression
+ | sub : Expression → Expression → Expression
+ deriving Inhabited, Repr
+
 inductive Statement where
   | skip : Statement
   | assign : Lean.Name → Expression → Statement
@@ -34,14 +40,6 @@ inductive Statement where
   | call : Lean.Name → Statement
   | guard : Expression → Expression → Statement → Statement
   deriving Inhabited, Repr
-
- inductive Expression where
-  | num : Nat → Expression
-  | ident : Lean.Name → Expression
-  | add : Expression → Expression → Expression
-  | sub : Expression → Expression → Expression
-  deriving Inhabited, Repr
-end
 
 syntax "[simpl_expr|" expression "]" : term
 syntax "[simpl|" statement "]" : term
